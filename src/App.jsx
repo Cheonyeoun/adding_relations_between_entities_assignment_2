@@ -30,12 +30,31 @@ const initialProducts = [
 ];
 
 function App() {
+  const [products, setProducts] = useState(initialProducts);
 
- 
+  const handleRatingSubmit = (productId, newRating) => {
+    const updated = products.map((product) => {
+      if (product.id === productId) {
+        const total = product.totalRatings + 1;
+        const avg = ((product.avgRating * product.totalRatings) + newRating) / total;
+        return { ...product, avgRating: avg, totalRatings: total };
+      }
+      return product;
+    });
+
+    setProducts(updated);
+  };
 
   return (
-    <div>
-     {/* code here */}
+    <div className="app">
+      <h1>Product Ratings</h1>
+      {products.map((product) => (
+        <ProductCard
+          key={product.id}
+          product={product}
+          onRatingSubmit={handleRatingSubmit}
+        />
+      ))}
     </div>
   );
 }
